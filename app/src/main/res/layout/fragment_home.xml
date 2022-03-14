@@ -15,11 +15,15 @@
         android:src="@drawable/logobrain"/>
 
     <GridView
-        android:id="@+id/gridview"
+        android:id="@+id/gridviewHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="7.2"
-        android:numColumns="3">
+        android:numColumns="3"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
 
     </GridView>
