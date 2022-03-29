@@ -11,5 +11,4 @@
         android:icon="@drawable/ic_baseline_note_add_24"
         android:title="@string/title_dashboard" />
 
-
 </menu>

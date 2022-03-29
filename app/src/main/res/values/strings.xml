@@ -15,4 +15,16 @@
     <string name="Sunday">Sunday</string>
     <string name="at_what_time">At what time?</string>
     <string name="set_time">SET TIME</string>
+    <string name="time">HOUR</string>
+    <string name="add">ADD</string>
+    <string name="hint_title">MyDigimind</string>
+    <string name="new_reminder">New reminder added</string>
+    <string name="ok_button">Delete</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="title">NOTICE</string>
+    <string name="msg">Do you wish to delete this reminder?</string>
+    <string name="msg_deleted">The reminder has been deleted</string>
+
+
+
 </resources>
