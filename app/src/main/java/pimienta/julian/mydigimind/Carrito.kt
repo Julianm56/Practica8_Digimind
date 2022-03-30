@@ -9,4 +9,8 @@ class Carrito : Serializable {
     fun agregar(p: Recordatorio) : Boolean{
         return recordatorios.add(p)
     }
+
+    fun remove(p: Recordatorio) : Boolean{
+        return recordatorios.remove(p)
+    }
 }

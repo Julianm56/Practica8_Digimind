@@ -1,13 +1,14 @@
 package pimienta.julian.mydigimind.ui.home
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.GridView
-import android.widget.TextView
+import android.widget.*
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.recordatorio.view.*
@@ -19,13 +20,17 @@ import pimienta.julian.mydigimind.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
-    var carrito: Carrito = Carrito()
 
     private var _binding: FragmentHomeBinding? = null
 
     private lateinit var homeViewModel: HomeViewModel
 
     private val binding get() = _binding!!
+
+
+    companion object {
+        var carrito: Carrito = Carrito()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,20 +44,66 @@ class HomeFragment : Fragment() {
 
         loadReminders()
 
-        var remindersAdapter: recordatorioAdapter = recordatorioAdapter(this.requireContext(), carrito.recordatorios)
+        var remindersAdapter: recordatorioAdapter =
+            recordatorioAdapter(this.requireContext(), carrito.recordatorios)
 
         var gw = root.findViewById(R.id.gridviewHome) as GridView
 
         gw.adapter = remindersAdapter
 
+            var reminder: Unit = gw.setOnItemClickListener { adapterView, view, i, l ->
+                adapterView.getItemAtPosition(i) as Recordatorio
+            }
+
+
+
+
+        root.setOnClickListener {
+            elimnar( reminder as Recordatorio,remindersAdapter)
+        }
+
         return root
     }
 
-    fun loadReminders() {
-        for (i in 0..8) {
-            carrito.agregar(Recordatorio("Sunday", "16:00", "Work"))
+    fun elimnar(recordatorio: Recordatorio, ba :BaseAdapter) {
+        val alertDialog: AlertDialog? = context?.let{
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setPositiveButton(R.string.ok_button,
+                    DialogInterface.OnClickListener{dialog, id->
+                        carrito.remove(recordatorio)
+                        ba.notifyDataSetChanged()
+                        Toast.makeText(context, R.string.msg_deleted, Toast.LENGTH_SHORT).show()
+
+                    })
+                setNegativeButton(R.string.cancel_button,
+                    DialogInterface.OnClickListener{dialog, id->
+                       //User cancelled
+                    })
+            }
+
+            builder?.setMessage(R.string.msg).setTitle(R.string.title)
+
+            builder.create()
         }
+        alertDialog?.show()
     }
+
+
+
+
+
+
+
+
+
+    fun loadReminders() {
+//        for (i in 0..8) {
+//            carrito.agregar(Recordatorio("Sunday", "16:00", "Work"))
+//        }
+    }
+
+
 
 
 override fun onDestroyView() {
