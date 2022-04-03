@@ -11,11 +11,14 @@ import android.widget.*
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.recordatorio.view.*
 import pimienta.julian.mydigimind.Carrito
 import pimienta.julian.mydigimind.R
 import pimienta.julian.mydigimind.Recordatorio
 import pimienta.julian.mydigimind.databinding.FragmentHomeBinding
+import pimienta.julian.mydigimind.ui.AdaptadorRecordatorio
 
 
 class HomeFragment : Fragment() {
@@ -30,6 +33,7 @@ class HomeFragment : Fragment() {
 
     companion object {
         var carrito: Carrito = Carrito()
+        lateinit var remindersAdapter: recordatorioAdapter
     }
 
     override fun onCreateView(
@@ -42,69 +46,41 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         homeViewModel.text.observe(viewLifecycleOwner, {})
 
-        loadReminders()
 
-        var remindersAdapter: recordatorioAdapter =
-            recordatorioAdapter(this.requireContext(), carrito.recordatorios)
+       // loadTestReminders()
+        cargar_tareas()
+
+         remindersAdapter = recordatorioAdapter(this.requireContext(), carrito.recordatorios)
 
         var gw = root.findViewById(R.id.gridviewHome) as GridView
 
         gw.adapter = remindersAdapter
 
-            var reminder: Unit = gw.setOnItemClickListener { adapterView, view, i, l ->
-                adapterView.getItemAtPosition(i) as Recordatorio
-            }
-
-
-
-
-        root.setOnClickListener {
-            elimnar( reminder as Recordatorio,remindersAdapter)
-        }
 
         return root
     }
-
-    fun elimnar(recordatorio: Recordatorio, ba :BaseAdapter) {
-        val alertDialog: AlertDialog? = context?.let{
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setPositiveButton(R.string.ok_button,
-                    DialogInterface.OnClickListener{dialog, id->
-                        carrito.remove(recordatorio)
-                        ba.notifyDataSetChanged()
-                        Toast.makeText(context, R.string.msg_deleted, Toast.LENGTH_SHORT).show()
-
-                    })
-                setNegativeButton(R.string.cancel_button,
-                    DialogInterface.OnClickListener{dialog, id->
-                       //User cancelled
-                    })
-            }
-
-            builder?.setMessage(R.string.msg).setTitle(R.string.title)
-
-            builder.create()
-        }
-        alertDialog?.show()
-    }
-
-
-
-
-
-
-
-
-
-    fun loadReminders() {
+//    fun loadTestReminders() {
 //        for (i in 0..8) {
 //            carrito.agregar(Recordatorio("Sunday", "16:00", "Work"))
 //        }
+//    }
+
+
+fun cargar_tareas(){
+    val preferencias = context?.getSharedPreferences("preferencias", Context.MODE_PRIVATE)
+    val gson : Gson = Gson()
+
+    var json = preferencias?.getString("Reminders",null)
+
+    val type = object : TypeToken<Carrito?>(){}.type
+
+    if (json == null){
+        carrito =  Carrito()
+    }else{
+        carrito = gson.fromJson(json,type)
     }
 
-
-
+}
 
 override fun onDestroyView() {
     super.onDestroyView()
@@ -142,7 +118,53 @@ class recordatorioAdapter: BaseAdapter {
         view.textDiasRecordatorio.setText(reminder.dias)
         view.txtNombreRecordatorio.setText(reminder.nombre)
         view.textTiempoRecordatorio.setText(reminder.tiempo)
+
+
+        view.setOnClickListener {
+            elimnar( reminder as Recordatorio)
+        }
+
         return view
     }
+
+    fun elimnar(recordatorio: Recordatorio) {
+        val alertDialog: AlertDialog? = context?.let{
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setPositiveButton(R.string.ok_button,
+                    DialogInterface.OnClickListener{dialog, id->
+                        HomeFragment.carrito.remove(recordatorio)
+                        guardar_json()
+                        HomeFragment.remindersAdapter.notifyDataSetChanged()
+                        Toast.makeText(context, R.string.msg_deleted, Toast.LENGTH_SHORT).show()
+
+                    })
+                setNegativeButton(R.string.cancel_button,
+                    DialogInterface.OnClickListener{dialog, id->
+                        //User cancelled
+                    })
+            }
+
+            builder?.setMessage(R.string.msg).setTitle(R.string.title)
+
+            builder.create()
+        }
+        alertDialog?.show()
+    }
+
+
+    fun guardar_json(){
+        val preferencias = context?.getSharedPreferences("preferencias", Context.MODE_PRIVATE)
+        val editor = preferencias?.edit()
+        val gson : Gson = Gson()
+
+        var json = gson.toJson(HomeFragment.carrito)
+
+        editor?.putString("Reminders",json)
+
+        editor?.apply()
+
+    }
+
 
 }

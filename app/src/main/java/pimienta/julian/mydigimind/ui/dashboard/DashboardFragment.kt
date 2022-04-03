@@ -1,6 +1,7 @@
 package pimienta.julian.mydigimind.ui.dashboard
 
 import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import pimienta.julian.mydigimind.R
 import pimienta.julian.mydigimind.Recordatorio
 import pimienta.julian.mydigimind.databinding.FragmentDashboardBinding
@@ -90,6 +92,23 @@ class DashboardFragment : Fragment() {
         HomeFragment.carrito.agregar(tarea)
 
         Toast.makeText(context,"The reminder was added",Toast.LENGTH_SHORT).show()
+
+        guardar_json()
+    }
+
+
+
+    fun guardar_json(){
+        val preferencias = context?.getSharedPreferences("preferencias", Context.MODE_PRIVATE)
+        val editor = preferencias?.edit()
+        val gson : Gson = Gson()
+
+        var json = gson.toJson(HomeFragment.carrito)
+
+        editor?.putString("Reminders",json)
+
+        editor?.apply()
+
     }
 
     fun set_time(view: View){
@@ -115,5 +134,9 @@ class DashboardFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
+
+
 
 }
