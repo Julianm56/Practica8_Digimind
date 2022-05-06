@@ -24,7 +24,10 @@
     <string name="title">NOTICE</string>
     <string name="msg">Do you wish to delete this reminder?</string>
     <string name="msg_deleted">The reminder has been deleted</string>
-
+    <string name="email">Correo Electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="confirm_pass">Confirmar Contraseña</string>
+    <string name="forgot_pass">¿Olvidaste tu ontraseña?</string>
 
 
 </resources>

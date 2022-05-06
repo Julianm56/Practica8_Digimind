@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/fondo.xml" value="0.101" />
+        <entry key="app/src/main/res/layout/activity_contrasena.xml" value="0.11528150134048257" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/activity_registro.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.19630192502532928" />
