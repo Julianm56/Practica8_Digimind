@@ -1,8 +1,10 @@
 package pimienta.julian.mydigimind.ui.dashboard
 
 import android.app.TimePickerDialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +12,10 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import pimienta.julian.mydigimind.R
 import pimienta.julian.mydigimind.Recordatorio
@@ -25,12 +24,11 @@ import pimienta.julian.mydigimind.databinding.FragmentDashboardBinding
 import pimienta.julian.mydigimind.ui.home.HomeFragment
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class DashboardFragment : Fragment() {
 
-    private lateinit var db: FirebaseFirestore
+    val db = Firebase.firestore
     private lateinit var auth: FirebaseAuth
 
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -50,7 +48,6 @@ class DashboardFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_dashboard,container,false)
         dashboardViewModel.text.observe(viewLifecycleOwner,{})
 
-        db = Firebase.firestore
         auth = FirebaseAuth.getInstance()
 
 
@@ -98,30 +95,38 @@ class DashboardFragment : Fragment() {
 
 
         if (Mon.isChecked) {
+            if (dia != "") dia += getString(R.string.Monday)
+
             dia = getString(R.string.Monday)
             mon = true
         }
         if (Tues.isChecked){
+            if (dia != "") dia += getString(R.string.Tuesday)
             dia = getString(R.string.Tuesday)
             tue = true
         }
         if (Wed.isChecked){
+            if (dia != "") dia += getString(R.string.Wednesday)
             dia = getString(R.string.Wednesday)
             wed = true
         }
         if (Thur.isChecked){
+            if (dia != "") dia += getString(R.string.Thursday)
             dia = getString(R.string.Thursday)
             thu = true
         }
         if (Fri.isChecked){
+            if (dia != "") dia += getString(R.string.Friday)
             dia = getString(R.string.Friday)
             fri = true
         }
         if (Sat.isChecked){
+            if (dia != "") dia += getString(R.string.Saturday)
             dia = getString(R.string.Saturday)
             sat = true
         }
         if (Sun.isChecked){
+            if (dia != "") dia += getString(R.string.Sunday)
             dia = getString(R.string.Sunday)
             sun = true
         }
@@ -137,20 +142,31 @@ class DashboardFragment : Fragment() {
             sun = true
         }
 
+        val reminder = hashMapOf(
+            "actividad" to titulo,
+            "lu" to mon,
+            "ma" to tue,
+            "mi" to wed,
+            "ju" to thu,
+            "vi" to fri,
+            "sa" to sat,
+            "do" to sun,
+            "tiempo" to tiempo
+        )
 
-        var tarea = Recordatorio(dia,tiempo,titulo)
+        db.collection("actividades")
+            .add(reminder)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
 
 
-        val ref = FirebaseDatabase.getInstance().getReference("actividades")
+        var tareaCar = Recordatorio(dia,tiempo,titulo)
 
-       // val user = auth.currentUser?.email
-       // if (user != null) {
-            val activiId:String = ref.push().key.toString()
-
-        val tareaFB = RecordatorioFB(activiId,mon,tue,wed,thu,fri,sat,sun,tiempo,titulo)
-        ref.child(activiId).setValue(tareaFB)
-        //}
-        HomeFragment.carrito.agregar(tarea)
+        HomeFragment.carrito.agregar(tareaCar)
         Toast.makeText(context,"The reminder was added",Toast.LENGTH_SHORT).show()
 
        // guardar_json()
