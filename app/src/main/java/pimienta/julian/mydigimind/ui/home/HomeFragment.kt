@@ -134,7 +134,7 @@ class recordatorioAdapter: BaseAdapter {
                 setPositiveButton(R.string.ok_button,
                     DialogInterface.OnClickListener{dialog, id->
                         HomeFragment.carrito.remove(recordatorio)
-                        guardar_json()
+                       // guardar_json()
                         HomeFragment.remindersAdapter.notifyDataSetChanged()
                         Toast.makeText(context, R.string.msg_deleted, Toast.LENGTH_SHORT).show()
 
@@ -153,18 +153,18 @@ class recordatorioAdapter: BaseAdapter {
     }
 
 
-    fun guardar_json(){
-        val preferencias = context?.getSharedPreferences("preferencias", Context.MODE_PRIVATE)
-        val editor = preferencias?.edit()
-        val gson : Gson = Gson()
-
-        var json = gson.toJson(HomeFragment.carrito)
-
-        editor?.putString("Reminders",json)
-
-        editor?.apply()
-
-    }
+//    fun guardar_json(){
+//        val preferencias = context?.getSharedPreferences("preferencias", Context.MODE_PRIVATE)
+//        val editor = preferencias?.edit()
+//        val gson : Gson = Gson()
+//
+//        var json = gson.toJson(HomeFragment.carrito)
+//
+//        editor?.putString("Reminders",json)
+//
+//        editor?.apply()
+//
+//    }
 
 
 }

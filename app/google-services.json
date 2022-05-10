@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "422948403855",
+    "project_id": "mydigimind-d8510",
+    "storage_bucket": "mydigimind-d8510.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422948403855:android:c764c637cae13e10178efa",
+        "android_client_info": {
+          "package_name": "pimienta.julian.mydigimind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422948403855-rr1onpkofme0qtf4s5t336cnoc16ms15.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDw3X_t4Q83nVKi_XkVY70XhnP6T1QY78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422948403855-rr1onpkofme0qtf4s5t336cnoc16ms15.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
